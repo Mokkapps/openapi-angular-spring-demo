@@ -1,0 +1,4 @@
+rootProject.name = 'openapi-demo'
+
+include 'backend'
+include 'frontend'

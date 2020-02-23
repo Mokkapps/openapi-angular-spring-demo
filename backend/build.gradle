@@ -1,0 +1,84 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.4.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id "org.openapi.generator" version "4.2.3"
+    id 'java'
+}
+
+apply plugin: 'idea'
+
+group = 'de.mokkapps'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+compileJava.dependsOn('openApiGenerate')
+
+idea {
+    module {
+        outputDir file('build/classes/java/main')
+        testOutputDir file('build/classes/test')
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "${rootDir}/backend/openapi/src/main/java"
+        }
+    }
+}
+
+openApiValidate {
+    inputSpec = "${rootDir}/openapi/schema.yaml".toString()
+}
+
+openApiGenerate {
+    generatorName = "spring"
+    library = "spring-boot"
+    inputSpec = "${rootDir}/openapi/schema.yaml".toString()
+    outputDir = "${rootDir}/backend/openapi".toString()
+    systemProperties = [
+            modelDocs      : "false",
+            models         : "",
+            apis           : "",
+            supportingFiles: "false"
+    ]
+    configOptions = [
+            useOptional          : "true",
+            swaggerDocketConfig  : "false",
+            performBeanValidation: "false",
+            useBeanValidation    : "false",
+            useTags              : "true",
+            singleContentTypes   : "true",
+            basePackage          : "de.mokkapps.gamenews.api",
+            configPackage        : "de.mokkapps.gamenews.api",
+            title                : rootProject.name,
+            java8                : "false",
+            dateLibrary          : "java8",
+            serializableModel    : "true",
+            artifactId           : rootProject.name,
+            apiPackage           : "de.mokkapps.gamenews.api",
+            modelPackage         : "de.mokkapps.gamenews.api.model",
+            invokerPackage       : "de.mokkapps.gamenews.api",
+            interfaceOnly        : "true"
+    ]
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compile 'io.springfox:springfox-swagger-ui:2.9.2'
+    compile "io.springfox:springfox-swagger2:2.9.2" // see https://github.com/OpenAPITools/openapi-generator/issues/4245
+    compile "org.openapitools:jackson-databind-nullable:0.1.0"
+    // see https://github.com/OpenAPITools/openapi-generator/issues/2901
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -1,0 +1,9 @@
+<h1>News</h1>
+
+<div *ngFor="let article of $articles | async">
+  <p>Title: {{article.title}}</p>
+  <img [src]="article.imageUrl" width="400" alt="Article image">
+  <p>Date: {{article.date}}</p>
+  <p>Description: {{article.description}}</p>
+  <p>ID: {{article.id}}</p>
+</div>

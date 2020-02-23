@@ -1,0 +1,48 @@
+openapi: "3.0.0"
+servers:
+  - url: http://localhost:8080/api
+info:
+  version: 1.0.0
+  title: Gaming News API
+paths:
+  /news:
+    summary: Get list of latest gaming news
+    get:
+      tags:
+        - News
+      summary: Get list of latest gaming news
+      operationId: getNews
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArticleList"
+
+components:
+  schemas:
+    ArticleList:
+      type: array
+      items:
+        $ref: "#/components/schema/Article"
+    Article:
+      required:
+        - id
+        - title
+        - date
+        - description
+        - imageUrl
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+        imageUrl:
+          type: string
